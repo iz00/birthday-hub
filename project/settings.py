@@ -81,6 +81,8 @@ DATABASES = {
     }
 }
 
+AUTH_GROUP_MODEL = 'birthday_hub.Group'
+AUTH_USER_MODEL = "birthday_hub.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -122,3 +124,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Media settings
+# https://codinggear.org/how-to-upload-images-in-django/
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "media/"
