@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractGroup
+from django.contrib.auth.models import Group
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -31,7 +31,7 @@ class Birthday(models.Model):
 
 
 # TODO
-class Group(AbstractGroup):
+class Group(Group):
     # Necessary so that after migrations are made, the group model can still be altered
     pass
 
@@ -40,13 +40,8 @@ class User(AbstractUser):
     birthdate = models.DateField(blank=False, null=False)
     email = models.EmailField(blank=False, null=False, unique=True)
 
-
-    def get_username(self):
-        return self.username
-
-
     # Allow user not to inform first_name, in which case it will be set to the username
-    first_name = models.CharField(blank=True, default=get_username ,null=False, max_length=50)
+    first_name = models.CharField(blank=True, null=False, max_length=50)
     last_name = models.CharField(blank=True, max_length=75)
     nickname = models.CharField(blank=True, max_length=50)
     picture = models.ImageField(blank=True, default=default_profile_picture ,upload_to="images/")
@@ -54,3 +49,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.email}) was born on {self.birthdate}."
+
+
+    # Set first_name before saving the user's model
+    def save(self, *args, **kwargs):
+        if not self.first_name:
+            self.first_name = self.username
+        super().save(*args, **kwargs)
