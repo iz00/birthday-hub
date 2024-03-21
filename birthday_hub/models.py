@@ -43,7 +43,6 @@ class User(AbstractUser):
     # Allow user not to inform first_name, in which case it will be set to the username
     first_name = models.CharField(blank=True, null=False, max_length=50)
     last_name = models.CharField(blank=True, max_length=75)
-    nickname = models.CharField(blank=True, max_length=50)
     picture = models.ImageField(blank=True, default=default_profile_picture ,upload_to="images/")
 
 

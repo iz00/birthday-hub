@@ -81,7 +81,7 @@ DATABASES = {
     }
 }
 
-AUTH_GROUP_MODEL = 'birthday_hub.Group'
+AUTH_GROUP_MODEL = "birthday_hub.Group"
 AUTH_USER_MODEL = "birthday_hub.User"
 
 # Password validation
