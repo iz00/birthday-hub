@@ -3,18 +3,18 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-# Get the default profile picture
+# Get the default profile picture from /media
 def default_profile_picture():
-    return "birthday_hub/images/default_profile_picture.jpg"
+    return "images/default_profile_picture.jpg"
 
 
 class Birthday(models.Model):
     birthdate = models.DateField(blank=False, null=False)
     first_name = models.CharField(blank=False, null=False, max_length=50)
-    last_name = models.CharField(blank=True, max_length=75)
-    nickname = models.CharField(blank=True, max_length=50)
-    notes = models.TextField(blank=True, help_text="Enter notes about this person and their birthday." ,max_length=250)
-    picture = models.ImageField(blank=True, default=default_profile_picture ,upload_to="images/")
+    last_name = models.CharField(blank=True, max_length=75, null=True)
+    nickname = models.CharField(blank=True, max_length=50, null=True)
+    notes = models.TextField(blank=True, help_text="Enter notes about this person and their birthday.", max_length=250, null=True)
+    picture = models.ImageField(blank=True, default=default_profile_picture, null=False, upload_to="images/")
 
     # The user responsible for storing this birthday in the dabatase
     user_id = models.ForeignKey("User", blank=False, null=False, on_delete=models.CASCADE, related_name="birthdays", verbose_name="birthday's registrant")
@@ -42,8 +42,8 @@ class User(AbstractUser):
 
     # Allow user not to inform first_name, in which case it will be set to the username
     first_name = models.CharField(blank=True, null=False, max_length=50)
-    last_name = models.CharField(blank=True, max_length=75)
-    picture = models.ImageField(blank=True, default=default_profile_picture ,upload_to="images/")
+    last_name = models.CharField(blank=True, max_length=75, null=True)
+    picture = models.ImageField(blank=True, default=default_profile_picture, null=False, upload_to="images/")
 
 
     def __str__(self):
