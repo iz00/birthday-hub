@@ -1,8 +1,9 @@
-from .models import Birthday, User
 from django.contrib import admin
 
+from .models import Birthday, User
 
 # Configurations for models in admin interface
+
 
 class BirthdayAdmin(admin.ModelAdmin):
     date_hierarchy = "birthdate"

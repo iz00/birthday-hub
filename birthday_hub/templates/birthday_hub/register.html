@@ -3,4 +3,19 @@
 {% block title %}BirthdayHub: Register{% endblock %}
 
 {% block body %}
+
+    <h2>Register</h2>
+
+    <form action="{% url 'birthday_hub:register' %}" method="post">
+
+        {% csrf_token %}
+
+        {{ form }}
+
+        <button type="submit">Register</button>
+
+    </form>
+
+    
+
 {% endblock %}
