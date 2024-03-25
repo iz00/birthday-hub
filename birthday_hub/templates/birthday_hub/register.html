@@ -8,6 +8,7 @@
 
     <form action="{% url 'birthday_hub:register' %}" method="post">
 
+        <!-- https://docs.djangoproject.com/en/5.0/ref/csrf/ -->
         {% csrf_token %}
 
         {{ form }}

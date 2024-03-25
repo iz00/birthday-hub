@@ -1,4 +1,7 @@
+from django.contrib.auth import login
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 
 from .forms import RegisterForm
 
@@ -12,3 +15,8 @@ def register(request):
         form = RegisterForm()
         context = {"form": form}
         return render(request, "birthday_hub/register.html", context)
+
+    if form.isvalid():
+        user = form.save()
+        login(request, user)
+        return HttpResponseRedirect(reverse("index"))
