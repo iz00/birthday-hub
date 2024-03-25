@@ -53,5 +53,8 @@ class User(AbstractUser):
     # Set first_name before saving the user's model
     def save(self, *args, **kwargs):
         if not self.first_name:
-            self.first_name = self.username
+            if len(self.username) > 50:
+                self.first_name = self.username[:50]
+            else:
+                self.first_name = self.username
         super().save(*args, **kwargs)
