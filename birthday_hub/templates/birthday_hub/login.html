@@ -3,4 +3,20 @@
 {% block title %}BirthdayHub: Log In{% endblock %}
 
 {% block body %}
+
+    <h2>Log In</h2>
+
+    <form action="{% url 'birthday_hub:login' %}" method="post">
+
+        <!-- https://docs.djangoproject.com/en/5.0/ref/csrf/ -->
+        {% csrf_token %}
+
+        {{ form }}
+
+        <button type="submit">Log In</button>
+
+    </form>
+
+    Don't have an account? <a href="{% url 'birthday_hub:register' %}">Register here</a>.
+
 {% endblock %}

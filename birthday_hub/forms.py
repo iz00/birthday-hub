@@ -16,3 +16,13 @@ class RegisterForm(UserCreationForm):
             "last_name": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Last name"}),
             "birthdate": forms.DateInput(attrs={"type": "date"}),
         }
+
+
+class LoginForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ["username", "password"]
+        widgets = {
+            "username": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Username"}),
+        }

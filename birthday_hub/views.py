@@ -3,11 +3,18 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .forms import RegisterForm
+from .forms import LoginForm, RegisterForm
 
 
 def index(request):
     return render(request, "birthday_hub/index.html")
+
+
+def login(request):
+    if request.method == "GET":
+        form = LoginForm()
+        context = {"form": form}
+        return render(request, "birthday_hub/login.html", context)
 
 
 def register(request):
