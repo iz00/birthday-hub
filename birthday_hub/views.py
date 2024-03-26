@@ -15,8 +15,14 @@ def register(request):
         form = RegisterForm()
         context = {"form": form}
         return render(request, "birthday_hub/register.html", context)
+    
+    form = RegisterForm(request.POST)
 
-    if form.isvalid():
+    try:
         user = form.save()
+    except ValueError:
+        context = {"form": form}
+        return render(request, "birthday_hub/register.html", context)
+    else:
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("birthday_hub:index"))
