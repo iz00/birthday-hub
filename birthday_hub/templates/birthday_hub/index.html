@@ -6,4 +6,15 @@
 
     <a href="{% url 'birthday_hub:logout' %}">Log Out</a>
 
+    <form>
+
+        <!-- https://docs.djangoproject.com/en/5.0/ref/csrf/ -->
+        {% csrf_token %}
+
+        {{ form }}
+
+        <button type="submit">Add Birthday</button>
+
+    </form>
+
 {% endblock %}

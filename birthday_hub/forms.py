@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
-from .models import User
+from .models import Birthday, User
 
 
 class RegisterForm(UserCreationForm):
@@ -25,4 +25,18 @@ class LoginForm(AuthenticationForm):
         fields = ["username", "password"]
         widgets = {
             "username": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Username"}),
+        }
+
+
+class AddBirthdayForm(forms.ModelForm):
+
+    class Meta:
+        model = Birthday
+        fields = ["first_name", "last_name", "nickname", "picture", "birthdate", "notes"]
+        widgets = {
+            "first_name": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Name"}),
+            "last_name": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Last name"}),
+            "nickname": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Nickname"}),
+            "birthdate": forms.DateInput(attrs={"type": "date"}),
+            "notes": forms.Textarea(attrs={"autocomplete":"off", "cols": 80, "placeholder": "Notes here.", "rows": 5}),
         }
