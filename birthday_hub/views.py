@@ -1,7 +1,5 @@
-from django.contrib.auth import login
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.urls import reverse
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect, render
 
 from .forms import LoginForm, RegisterForm
 
@@ -10,11 +8,26 @@ def index(request):
     return render(request, "birthday_hub/index.html")
 
 
-def login(request):
+def login_view(request):
     if request.method == "GET":
         form = LoginForm()
         context = {"form": form}
         return render(request, "birthday_hub/login.html", context)
+
+    form = LoginForm(request, request.POST)
+
+    if not form.is_valid():
+        context = {"form": form}
+        return render(request, "birthday_hub/login.html", context)
+
+    username = form.cleaned_data["username"]
+    password = form.cleaned_data["password"]
+
+    user = authenticate(request, username=username, password=password)
+
+    if user:
+        login(request, user)
+        return redirect("birthday_hub:index")
 
 
 def register(request):
@@ -22,7 +35,7 @@ def register(request):
         form = RegisterForm()
         context = {"form": form}
         return render(request, "birthday_hub/register.html", context)
-    
+
     form = RegisterForm(request.POST)
 
     try:
@@ -30,6 +43,6 @@ def register(request):
     except ValueError:
         context = {"form": form}
         return render(request, "birthday_hub/register.html", context)
-    else:
-        login(request, user)
-        return HttpResponseRedirect(reverse("birthday_hub:index"))
+
+    login(request, user)
+    return redirect("birthday_hub:index")
