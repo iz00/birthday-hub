@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 
 from .forms import LoginForm, RegisterForm
@@ -28,6 +28,11 @@ def login_view(request):
     if user:
         login(request, user)
         return redirect("birthday_hub:index")
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("birthday_hub:login")
 
 
 def register(request):
