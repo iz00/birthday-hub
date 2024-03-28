@@ -2,6 +2,8 @@
 
 {% block body %}
 
+    <h2>Hello, {{ request.user.username }}.</h2>
+
     <a href="{% url 'birthday_hub:logout' %}">Log Out</a>
 
 {% endblock %}

@@ -84,6 +84,9 @@ DATABASES = {
 AUTH_GROUP_MODEL = "birthday_hub.Group"
 AUTH_USER_MODEL = "birthday_hub.User"
 
+LOGIN_REDIRECT_URL = "birthday_hub:index"
+LOGIN_URL = "birthday_hub:login"
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

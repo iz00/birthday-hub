@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from .forms import LoginForm, RegisterForm
 
 
+@login_required(redirect_field_name=None)
 def index(request):
     return render(request, "birthday_hub/index.html")
 
