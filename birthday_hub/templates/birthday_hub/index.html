@@ -6,7 +6,7 @@
 
     <a href="{% url 'birthday_hub:logout' %}">Log Out</a>
 
-    <form>
+    <form action="{% url 'birthday_hub:add_birthday' %}" id="add-birthday" method="post">
 
         <!-- https://docs.djangoproject.com/en/5.0/ref/csrf/ -->
         {% csrf_token %}

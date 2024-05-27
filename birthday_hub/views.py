@@ -13,6 +13,20 @@ def index(request):
         return render(request, "birthday_hub/index.html", context)
 
 
+@login_required(redirect_field_name=None)
+def add_birthday(request):
+    form = AddBirthdayForm(request.POST)
+    form.instance.user_id = request.user
+
+    try:
+        form.save()
+    except ValueError:
+        context = {"form": form}
+        return render(request, "birthday_hub/index.html", context)
+
+    return redirect("birthday_hub:index")
+
+
 def login_view(request):
     if request.method == "GET":
         form = LoginForm()
