@@ -16,7 +16,7 @@ def index(request):
 @login_required(redirect_field_name=None)
 def add_birthday(request):
     form = AddBirthdayForm(request.POST, request.FILES)
-    form.instance.user_id = request.user
+    form.instance.user = request.user
 
     try:
         form.save()

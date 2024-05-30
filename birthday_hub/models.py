@@ -17,13 +17,21 @@ class Birthday(models.Model):
     picture = models.ImageField(blank=True, default=default_profile_picture, null=False, upload_to="images/")
 
     # The user responsible for storing this birthday in the dabatase
-    user_id = models.ForeignKey("User", blank=False, null=False, on_delete=models.CASCADE, related_name="birthdays", verbose_name="birthday's registrant")
+    user = models.ForeignKey("User", blank=False, null=False, on_delete=models.CASCADE, related_name="birthdays", verbose_name="birthday's registrant")
 
 
     class Meta:
         # Define uniqueness constraint: a user can't register or store the same birthday more than once,
         # and the same person can't have two birthdates
-        unique_together = [["first_name", "last_name", "nickname", "picture", "user_id"]]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["first_name", "last_name", "nickname", "picture", "user"],
+                name='unique_birthday',
+                # Since some of the fields can be null, and SQLite compares nulls as distinct in unique constraints
+                # Force it to compare nulls as equals
+                nulls_distinct=False,
+                violation_error_message="This person already exists.")
+        ]
 
 
     def __str__(self):

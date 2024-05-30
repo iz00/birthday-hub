@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-$n21(4d5^#!&ki7m*&b^o4tby)^fqn0(kf5xp0*wkftd9j2sl%"
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -71,6 +72,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "project.wsgi.application"
 
 
+# Silence Warning identified in migration
+# https://docs.djangoproject.com/en/5.0/ref/settings/#silenced-system-checks
+
+SILENCED_SYSTEM_CHECKS = ["models.W047"]
+
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -86,6 +93,7 @@ AUTH_USER_MODEL = "birthday_hub.User"
 
 LOGIN_REDIRECT_URL = "birthday_hub:index"
 LOGIN_URL = "birthday_hub:login"
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -123,10 +131,12 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 # Media settings
 # https://codinggear.org/how-to-upload-images-in-django/
