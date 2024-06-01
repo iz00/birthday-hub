@@ -24,7 +24,6 @@ def add_birthday(request):
         form.save()
     except ValueError:
         context = {"form": form}
-        print(context)
         return render(request, "birthday_hub/index.html", context)
 
     return redirect("birthday_hub:index")

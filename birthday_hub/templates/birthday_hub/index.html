@@ -10,19 +10,20 @@
 
         <!-- https://docs.djangoproject.com/en/5.0/ref/csrf/ -->
         {% csrf_token %}
+        <div>
+            {{ form.non_field_errors }}
 
-        {{ form.non_field_errors }}
+            {% for field in form.visible_fields %}
+                <div>
+                    {{ field.errors }}
+                    {{ field.label }}:
+                    {% if field.help_text %}<div>{{ field.help_text }}</div>{% endif %}
+                    {{ field }}
+                </div>
+            {% endfor %}
 
-        {% for field in form.visible_fields %}
-            <div>
-                {{ field.errors }}
-                {{ field.label }}:
-                {% if field.help_text %}<div>{{ field.help_text }}</div>{% endif %}
-                {{ field }}
-            </div>
-        {% endfor %}
-
-        <button type="submit">Add Birthday</button>
+            <button type="submit">Add Birthday</button>
+        </div>
 
     </form>
 

@@ -1,6 +1,8 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 # Get the default profile picture from /media
@@ -32,6 +34,11 @@ class Birthday(models.Model):
                 nulls_distinct=False,
                 violation_error_message="This person already exists.")
         ]
+
+
+    def clean(self):
+        if self.birthdate and self.birthdate > timezone.now().date():
+            raise ValidationError({"birthdate": "The birthdate must be in the past."})
 
 
     def __str__(self):
