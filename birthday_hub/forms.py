@@ -33,19 +33,23 @@ class AddBirthdayForm(forms.ModelForm):
 
     class Meta:
         model = Birthday
+
          # user field is included only to garantee checking UniqueConstraint in model
-        fields = ["user", "first_name", "last_name", "nickname", "picture", "birthdate", "notes"]
+        fields = ["user", "first_name", "last_name", "nickname", "picture", "birthdate", "ignore_year", "notes"]
         widgets = {
+
             # It does not appear to user
             "user": forms.HiddenInput(),
             "first_name": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Name"}),
             "last_name": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Last name"}),
             "nickname": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Nickname"}),
             "birthdate": forms.DateInput(attrs={"type": "date", "max": timezone.now().date()}),
+            "ignore_year": forms.CheckboxInput(),
             "notes": forms.Textarea(attrs={"autocomplete":"off", "cols": 80, "placeholder": "Notes here.", "rows": 5}),
         }
 
 
+    # user field is hidden, so it should not be required
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["user"].required = False

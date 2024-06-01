@@ -12,6 +12,7 @@ def default_profile_picture():
 
 class Birthday(models.Model):
     birthdate = models.DateField(blank=False, null=False)
+    ignore_year = models.BooleanField(blank=True, default=False, verbose_name="I don't know the birth year", null=False)
     first_name = models.CharField(blank=False, null=False, max_length=50)
     last_name = models.CharField(blank=True, max_length=75, null=True)
     nickname = models.CharField(blank=True, max_length=50, null=True)
@@ -23,12 +24,14 @@ class Birthday(models.Model):
 
 
     class Meta:
+
         # Define uniqueness constraint: a user can't register or store the same birthday more than once,
         # and the same person can't have two birthdates
         constraints = [
             models.UniqueConstraint(
                 fields=["first_name", "last_name", "nickname", "user"],
-                name='unique_birthday',
+                name="unique_birthday",
+
                 # Since some of the fields can be null, and SQLite compares nulls as distinct in unique constraints
                 # Force it to compare nulls as equals
                 nulls_distinct=False,
@@ -36,6 +39,7 @@ class Birthday(models.Model):
         ]
 
 
+    # Custom validation, don't allow user to set a birthdate greater than the current date
     def clean(self):
         if self.birthdate and self.birthdate > timezone.now().date():
             raise ValidationError({"birthdate": "The birthdate must be in the past."})
