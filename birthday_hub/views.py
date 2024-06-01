@@ -15,13 +15,16 @@ def index(request):
 
 @login_required(redirect_field_name=None)
 def add_birthday(request):
-    form = AddBirthdayForm(request.POST, request.FILES)
-    form.instance.user = request.user
+    updated_request = request.POST.copy()
+    updated_request.update({"user": request.user})
+
+    form = AddBirthdayForm(updated_request, request.FILES)
 
     try:
         form.save()
     except ValueError:
         context = {"form": form}
+        print(context)
         return render(request, "birthday_hub/index.html", context)
 
     return redirect("birthday_hub:index")

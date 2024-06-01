@@ -25,7 +25,7 @@ class Birthday(models.Model):
         # and the same person can't have two birthdates
         constraints = [
             models.UniqueConstraint(
-                fields=["first_name", "last_name", "nickname", "picture", "user"],
+                fields=["first_name", "last_name", "nickname", "user"],
                 name='unique_birthday',
                 # Since some of the fields can be null, and SQLite compares nulls as distinct in unique constraints
                 # Force it to compare nulls as equals
