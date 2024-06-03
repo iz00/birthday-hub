@@ -1,4 +1,5 @@
 {% extends "birthday_hub/layout.html" %}
+{% load static %}
 
 {% block body %}
 
@@ -27,4 +28,8 @@
 
     </form>
 
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'birthday_hub/index.js' %}"></script>
 {% endblock %}

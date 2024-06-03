@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
 from .forms import AddBirthdayForm, LoginForm, RegisterForm
@@ -15,6 +16,9 @@ def index(request):
 
 @login_required(redirect_field_name=None)
 def add_birthday(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
     updated_request = request.POST.copy()
     updated_request.update({"user": request.user})
 
@@ -23,10 +27,9 @@ def add_birthday(request):
     try:
         form.save()
     except ValueError:
-        context = {"form": form}
-        return render(request, "birthday_hub/index.html", context)
+        return JsonResponse({"error": form.errors.as_json()}, safe=False, status=400)
 
-    return redirect("birthday_hub:index")
+    return JsonResponse({"message": "Birthday added successfully."}, status=201)
 
 
 def login_view(request):
