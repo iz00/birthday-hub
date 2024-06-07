@@ -1,4 +1,5 @@
 {% extends "birthday_hub/layout.html" %}
+{% load static %}
 
 {% block body %}
 
@@ -6,4 +7,29 @@
 
     <a href="{% url 'birthday_hub:logout' %}">Log Out</a>
 
+    <form action="{% url 'birthday_hub:add_birthday' %}" enctype="multipart/form-data" id="add-birthday" method="post">
+
+        <!-- https://docs.djangoproject.com/en/5.0/ref/csrf/ -->
+        {% csrf_token %}
+        <div>
+            {{ form.non_field_errors }}
+
+            {% for field in form.visible_fields %}
+                <div>
+                    {{ field.errors }}
+                    {{ field.label }}:
+                    {% if field.help_text %}<div>{{ field.help_text }}</div>{% endif %}
+                    {{ field }}
+                </div>
+            {% endfor %}
+
+            <button type="submit">Add Birthday</button>
+        </div>
+
+    </form>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'birthday_hub/index.js' %}"></script>
 {% endblock %}

@@ -7,7 +7,7 @@ from .models import Birthday, User
 
 class BirthdayAdmin(admin.ModelAdmin):
     date_hierarchy = "birthdate"
-    list_display = ["id", "first_name", "last_name", "nickname", "birthdate"]
+    list_display = ["id", "first_name", "last_name", "nickname", "birthdate", "ignore_year"]
     list_filter = ["birthdate"]
     search_fields = ["first_name", "last_name", "nickname"]
 
