@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function addBirthday(event) {
     event.preventDefault();
+
+    const userMessages = document.querySelectorAll('p');
+    userMessages.forEach(message => message.remove());
+
     sendBirthdayData();
 }
 
@@ -20,12 +24,51 @@ async function sendBirthdayData() {
             body: formData,
             credentials: 'same-origin',
         });
-        console.log(await response.json());
+
+        const data = await response.json();
+
+        if (response.ok) {
+            handleSuccess(data.message);
+            console.log(data);
+        } else {
+            displayFormErrors(JSON.parse(data.errors));
+            console.error(data.errors);
+        }
+
     } catch (e) {
-        console.error(e);
+        console.error(`Network error: ${e}.`);
     }
 }
 
+function handleSuccess(message) {
+    addBirthdayForm.reset();
+    const messageElement = document.createElement('p');
+    messageElement.innerHTML = message;
+    addBirthdayForm.append(messageElement);
+}
+
+function displayFormErrors(errors) {
+    // Display non-field errors
+    if (Object.keys(errors).length === 1) {
+        errors['__all__']?.forEach(error => {
+            const errorElement = document.createElement('p');
+            errorElement.innerHTML = error.message;
+            addBirthdayForm.insertBefore(errorElement, addBirthdayForm.children[0]);
+        });
+    }
+
+    // Display field-specific errors
+    for (const [field, errorDetails] of Object.entries(errors)) {
+        const formFieldElement = document.querySelector(`[name=${field}]`);
+        if (formFieldElement) {
+            errorDetails.forEach(error => {
+                const errorElement = document.createElement('p');
+                errorElement.innerHTML = error.message;
+                formFieldElement.parentElement.append(errorElement);
+            });
+        }
+    }
+}
 
 // https://docs.djangoproject.com/en/5.0/howto/csrf/#acquiring-the-token-if-csrf-use-sessions-and-csrf-cookie-httponly-are-false
 function getCookie(name) {

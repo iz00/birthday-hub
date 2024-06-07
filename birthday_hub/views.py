@@ -27,7 +27,7 @@ def add_birthday(request):
     try:
         form.save()
     except ValueError:
-        return JsonResponse({"error": form.errors.as_json()}, safe=False, status=400)
+        return JsonResponse({"errors": form.errors.as_json()}, status=400)
 
     return JsonResponse({"message": "Birthday added successfully."}, status=201)
 
