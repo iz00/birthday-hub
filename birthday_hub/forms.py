@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.utils import timezone
 
-from .models import Birthday, User
+from .models import Birthday, User, current_date
 
 
 class RegisterForm(UserCreationForm):
@@ -15,7 +14,7 @@ class RegisterForm(UserCreationForm):
             "email": forms.EmailInput(attrs={"autocomplete": "off", "placeholder": "email@example.com"}),
             "first_name": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Name"}),
             "last_name": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Last name"}),
-            "birthdate": forms.DateInput(attrs={"type": "date"}),
+            "birthdate": forms.DateInput(attrs={"type": "date", "max": current_date()}),
         }
 
 
@@ -43,7 +42,7 @@ class AddBirthdayForm(forms.ModelForm):
             "first_name": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Name"}),
             "last_name": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Last name"}),
             "nickname": forms.TextInput(attrs={"autocomplete": "off", "placeholder": "Nickname"}),
-            "birthdate": forms.DateInput(attrs={"type": "date", "max": timezone.now().date()}),
+            "birthdate": forms.DateInput(attrs={"type": "date", "max": current_date()}),
             "ignore_year": forms.CheckboxInput(),
             "notes": forms.Textarea(attrs={"autocomplete":"off", "cols": 80, "placeholder": "Notes here.", "rows": 5}),
         }
