@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.serializers import serialize
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
@@ -30,6 +31,15 @@ def add_birthday(request):
         return JsonResponse({"errors": form.errors.as_json()}, status=400)
 
     return JsonResponse({"message": "Birthday added successfully."}, status=201)
+
+
+@login_required(redirect_field_name=None)
+def list_birthdays(request):
+    if request.method != "GET":
+        return JsonResponse({"error": "GET request required."}, status=400)
+
+    birthdays = request.user.birthdays.order_by("first_name").all()
+    return JsonResponse(serialize("json", birthdays), safe=False, status=200)
 
 
 def login_view(request):

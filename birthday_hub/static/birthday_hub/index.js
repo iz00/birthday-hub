@@ -1,9 +1,28 @@
 const addBirthdayForm = document.querySelector('#add-birthday');
 
 document.addEventListener('DOMContentLoaded', () => {
-
+    loadBirthdays();
     addBirthdayForm.addEventListener('submit', addBirthday);
 });
+
+async function loadBirthdays() {
+    try {
+        const response = await fetch('/birthdays', {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log(data);
+        } else {
+            console.error(data);
+        }
+
+    } catch (e) {
+        console.error(`Network error: ${e}.`);
+    }
+}
 
 function addBirthday(event) {
     event.preventDefault();
