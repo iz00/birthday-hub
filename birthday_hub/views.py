@@ -1,11 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.serializers import serialize
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
 from .forms import AddBirthdayForm, LoginForm, RegisterForm
-
 
 @login_required(redirect_field_name=None)
 def index(request):
@@ -39,7 +37,7 @@ def list_birthdays(request):
         return JsonResponse({"error": "GET request required."}, status=400)
 
     birthdays = request.user.birthdays.order_by("first_name").all()
-    return JsonResponse(serialize("json", birthdays), safe=False, status=200)
+    return JsonResponse([birthday.serialize() for birthday in birthdays], safe=False, status=200)
 
 
 def login_view(request):

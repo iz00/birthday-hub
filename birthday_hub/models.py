@@ -18,9 +18,11 @@ class Birthday(models.Model):
     birthdate = models.DateField(blank=False, null=False)
     ignore_year = models.BooleanField(blank=True, default=False, verbose_name="I don't know the birth year", null=False)
     first_name = models.CharField(blank=False, null=False, max_length=50)
-    last_name = models.CharField(blank=True, max_length=75, null=True)
-    nickname = models.CharField(blank=True, max_length=50, null=True)
-    notes = models.TextField(blank=True, help_text="Enter notes about this person and their birthday.", max_length=250, null=True)
+
+    # https://docs.djangoproject.com/en/5.0/ref/models/fields/#django.db.models.Field.null:~:text=Avoid%20using%20null,with%20blank%20values
+    last_name = models.CharField(blank=True, max_length=75, null=False)
+    nickname = models.CharField(blank=True, max_length=50, null=False)
+    notes = models.TextField(blank=True, help_text="Enter notes about this person and their birthday.", max_length=250, null=False)
     picture = models.ImageField(blank=True, default=default_profile_picture, null=False, upload_to="images/")
 
     # The user responsible for storing this birthday in the dabatase
@@ -47,6 +49,31 @@ class Birthday(models.Model):
     def clean(self):
         if self.birthdate and self.birthdate > current_date():
             raise ValidationError({"birthdate": "The birthdate must be in the past."})
+
+
+    def serialize(self):
+        today = current_date()
+        birth_day_month = self.birthdate.strftime("%m-%d")
+
+        if self.ignore_year:
+            birthdate = birth_day_month
+            age = None
+        else:
+            birthdate = self.birthdate.strftime("%Y-%m-%d")
+            age = today.year - self.birthdate.year - ((today.month, today.day) < (self.birthdate.month, self.birthdate.day))
+
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "nickname": self.nickname,
+            "picture": self.picture.url,
+            "notes": self.notes,
+            "birthdate": birthdate,
+            "age": age,
+            "is_today": today.strftime("%m-%d") == birth_day_month,
+            "birthday_weekday": timezone.datetime.strptime(f"{today.year}-{birth_day_month}", "%Y-%m-%d").strftime("%A"),
+        }
 
 
     def __str__(self):
