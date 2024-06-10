@@ -54,6 +54,7 @@ class Birthday(models.Model):
     def serialize(self):
         today = current_date()
         birth_day_month = self.birthdate.strftime("%m-%d")
+        next_birthday = today.replace(month=self.birthdate.month, day=self.birthdate.day)
 
         if self.ignore_year:
             birthdate = birth_day_month
@@ -72,7 +73,8 @@ class Birthday(models.Model):
             "birthdate": birthdate,
             "age": age,
             "is_today": today.strftime("%m-%d") == birth_day_month,
-            "birthday_weekday": timezone.datetime.strptime(f"{today.year}-{birth_day_month}", "%Y-%m-%d").strftime("%A"),
+            "birthday_weekday": next_birthday.strftime("%A"),
+            "days_left": (next_birthday.replace(year=today.year + 1) - today).days if next_birthday < today else (next_birthday - today).days,
         }
 
 
