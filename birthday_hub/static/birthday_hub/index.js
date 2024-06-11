@@ -15,6 +15,7 @@ async function loadBirthdays() {
 
         if (response.ok) {
             console.log(data);
+            displayBirthdays(data);
         } else {
             console.error(data);
         }
@@ -22,6 +23,27 @@ async function loadBirthdays() {
     } catch (e) {
         console.error(`Network error: ${e}.`);
     }
+}
+
+function displayBirthdays(birthdays) {
+    const container = document.querySelector('#birthdays');
+    container.innerHTML = '';
+
+    birthdays.forEach(birthday => {
+
+        const birthdayElement = document.createElement('div');
+
+        birthdayElement.innerHTML = `
+            <img src="${birthday.picture}" alt="Profile Picture">
+            <p>First Name: ${birthday.first_name}</p>
+            <p>Last Name: ${birthday.last_name || 'N/A'}</p>
+            <p>Nickname: ${birthday.nickname || 'N/A'}</p>
+            <p>Birthdate: ${birthday.birthdate}</p>
+            <p>Notes: ${birthday.notes || 'No notes available'}</p>
+        `;
+
+        container.appendChild(birthdayElement);
+    });
 }
 
 function addBirthday(event) {
