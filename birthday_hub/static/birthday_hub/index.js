@@ -42,8 +42,35 @@ function displayBirthdays(birthdays) {
             <p>Notes: ${birthday.notes || 'No notes available'}</p>
         `;
 
+        const delete_button = document.createElement('button');
+        delete_button.innerHTML = 'Delete Birthday';
+
+        delete_button.addEventListener('click', () => deleteBirthday(birthday.id));
+
+        birthdayElement.append(delete_button);
         container.appendChild(birthdayElement);
     });
+}
+
+async function deleteBirthday(birthdayId) {
+    try {
+        const response = await fetch(`/delete/${birthdayId}`, {
+            method: 'DELETE',
+            credentials: 'same-origin',
+            headers: { "X-CSRFToken": getCookie("csrftoken") },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log(data);
+        } else {
+            console.error(data);
+        }
+
+    } catch (e) {
+        console.error(`Network error: ${e}.`);
+    }
 }
 
 function addBirthday(event) {
@@ -57,13 +84,13 @@ function addBirthday(event) {
 
 async function sendBirthdayData() {
     const formData = new FormData(addBirthdayForm);
-    formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
 
     try {
         const response = await fetch('/add/birthday', {
             method: 'POST',
             body: formData,
             credentials: 'same-origin',
+            headers: { "X-CSRFToken": getCookie("csrftoken") },
         });
 
         const data = await response.json();

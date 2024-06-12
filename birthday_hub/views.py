@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
 from .forms import AddBirthdayForm, LoginForm, RegisterForm
+from .models import Birthday
 
 @login_required(redirect_field_name=None)
 def index(request):
@@ -16,7 +17,7 @@ def index(request):
 @login_required(redirect_field_name=None)
 def add_birthday(request):
     if request.method != "POST":
-        return JsonResponse({"error": "POST request required."}, status=400)
+        return JsonResponse({"error": "POST request required."}, status=405)
 
     updated_request = request.POST.copy()
     updated_request.update({"user": request.user})
@@ -34,10 +35,23 @@ def add_birthday(request):
 @login_required(redirect_field_name=None)
 def list_birthdays(request):
     if request.method != "GET":
-        return JsonResponse({"error": "GET request required."}, status=400)
+        return JsonResponse({"error": "GET request required."}, status=405)
 
     birthdays = request.user.birthdays.order_by("first_name").all()
     return JsonResponse([birthday.serialize() for birthday in birthdays], safe=False, status=200)
+
+
+@login_required(redirect_field_name=None)
+def delete_birthday(request, birthday_id):
+    if request.method != "DELETE":
+        return JsonResponse({"error": "DELETE request required."}, status=405)
+
+    try:
+        Birthday.objects.get(pk=birthday_id, user=request.user).delete()
+    except Birthday.DoesNotExist:
+        return JsonResponse({"error": "Birthday not found."}, status=404)
+
+    return JsonResponse({"message": "Birthday deleted successfully."}, status=200)
 
 
 def login_view(request):
