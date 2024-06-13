@@ -33,12 +33,34 @@ def add_birthday(request):
 
 
 @login_required(redirect_field_name=None)
-def list_birthdays(request):
+def list_birthdays(request, ordering="days_left-asc"):
     if request.method != "GET":
         return JsonResponse({"error": "GET request required."}, status=405)
 
-    birthdays = request.user.birthdays.order_by("first_name").all()
-    return JsonResponse([birthday.serialize() for birthday in birthdays], safe=False, status=200)
+    try:
+        sort_by, order = ordering.split("-")
+    except ValueError:
+        sort_by = ordering
+        order = "asc"
+    reverse = order == "desc"
+
+    birthdays = [birthday.serialize() for birthday in request.user.birthdays.all()]
+    birthdays.sort(key=lambda x: x["days_left"])
+
+    if sort_by in ("first_name", "last_name", "nickname"):
+        birthdays.sort(key=lambda x: x[sort_by].lower(), reverse=reverse)
+
+    elif sort_by == "age":
+        # https://stackoverflow.com/a/18411610
+        birthdays.sort(key=lambda x: (x["age"] is not None, x["age"]) if reverse else (x["age"] is None, x["age"]), reverse=reverse)
+
+    elif sort_by == "birthdate":
+        birthdays.sort(key=lambda x: x["birthdate"][-5:], reverse=reverse)
+    
+    elif sort_by == "days_left" and reverse:
+        birthdays.sort(key=lambda x: x["days_left"], reverse=True)
+
+    return JsonResponse(birthdays, safe=False, status=200)
 
 
 @login_required(redirect_field_name=None)

@@ -1,13 +1,15 @@
 const addBirthdayForm = document.querySelector('#add-birthday');
+const orderingOptionsSelect = document.querySelector('#sort-options');
 
 document.addEventListener('DOMContentLoaded', () => {
     loadBirthdays();
     addBirthdayForm.addEventListener('submit', addBirthday);
+    orderingOptionsSelect.addEventListener('change', () => { loadBirthdays(orderingOptionsSelect.value) });
 });
 
-async function loadBirthdays() {
+async function loadBirthdays(ordering='days_left-asc') {
     try {
-        const response = await fetch('/birthdays', {
+        const response = await fetch(`/birthdays/${ordering}`, {
             method: 'GET',
         });
 
